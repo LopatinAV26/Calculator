@@ -1,13 +1,55 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-  //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-  // to see how IntelliJ IDEA suggests fixing it.
-  IO.println(String.format("Hello and welcome!"));
+public class Main {
+	public static void main(String[] args) {
+		try (java.util.Scanner scanner = new java.util.Scanner(System.in)) {
+			if (!scanner.hasNextLine()) {
+				return;
+			}
+			String input = scanner.nextLine().trim();
+			if (input.isEmpty()) {
+				return;
+			}
 
-  for (int i = 1; i <= 5; i++) {
-    //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-    // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-    IO.println("i = " + i);
-  }
+			java.util.regex.Matcher matcher = java.util.regex.Pattern
+				.compile("^\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*([+\\-*/])\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*$")
+				.matcher(input);
+
+			if (!matcher.matches()) {
+				System.out.println("Invalid expression");
+				return;
+			}
+
+			double leftOperand = Double.parseDouble(matcher.group(1));
+			String operator = matcher.group(2);
+			double rightOperand = Double.parseDouble(matcher.group(3));
+
+			double result;
+			switch (operator) {
+				case "+":
+					result = leftOperand + rightOperand;
+					break;
+				case "-":
+					result = leftOperand - rightOperand;
+					break;
+				case "*":
+					result = leftOperand * rightOperand;
+					break;
+				case "/":
+					if (rightOperand == 0.0) {
+						System.out.println("Division by zero");
+						return;
+					}
+					result = leftOperand / rightOperand;
+					break;
+				default:
+					System.out.println("Invalid operator");
+					return;
+			}
+
+			if (result == Math.rint(result)) {
+				System.out.println((long) result);
+			} else {
+				System.out.println(result);
+			}
+		}
+	}
 }
